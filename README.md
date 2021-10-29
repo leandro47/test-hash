@@ -1,65 +1,152 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## php-search-hash
 
-## About Laravel
+## Installation
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+clone this project 
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+```bash
+git clone https://github.com/leandro47/test-hash.git
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+install dependencies
 
-## Learning Laravel
+```bash
+composer install
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+configure your database in `.env` including full database path, ex `/media/username/home/test-hash/database/db.sqlite`
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+DB_CONNECTION=sqlite
+DB_DATABASE=/your/full/path 
 
-## Laravel Sponsors
+```
+start project with commands bellow
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+```bash
+php artisan migrate:fresh
+php artisan key:generate
+php artisan serve
+```
 
-### Premium Partners
+## Documentation
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[CMS Max](https://www.cmsmax.com/)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+for generate hash use this command as example
+```bash
+php artisan hash:search testword --request=3
 
-## Contributing
+```
+output:
+```bash
+Command executed
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+View the results in `http://127.0.0.1:8000/hash/generated/`
 
-## Code of Conduct
+``` json 
+{
+  "number": {
+    "current_page": 1,
+    "data": [
+      {
+        "batch": "2021-10-29 04:51:33",
+        "block": "11",
+        "enter_word": "test",
+        "key_found": "WNDZ8mqN"
+      },
+      {
+        "batch": "2021-10-29 04:51:34",
+        "block": "12",
+        "enter_word": "000012d39a221ad9d0e46b56d875e0c3",
+        "key_found": "0VHWn3TH"
+      },
+      {
+        "batch": "2021-10-29 04:51:34",
+        "block": "13",
+        "enter_word": "00001ca6c814fcb9a0aed15d94ce01a0",
+        "key_found": "rTiSdYiD"
+      }
+    ],
+    "first_page_url": "http://127.0.0.1:8000/hash/generated?page=1",
+    "from": 1,
+    "last_page": 1,
+    "last_page_url": "http://127.0.0.1:8000/hash/generated?page=1",
+    "links": [
+      {
+        "url": null,
+        "label": "&laquo; Previous",
+        "active": false
+      },
+      {
+        "url": "http://127.0.0.1:8000/hash/generated?page=1",
+        "label": "1",
+        "active": true
+      },
+      {
+        "url": null,
+        "label": "Next &raquo;",
+        "active": false
+      }
+    ],
+    "next_page_url": null,
+    "path": "http://127.0.0.1:8000/hash/generated",
+    "per_page": 20,
+    "prev_page_url": null,
+    "to": 3,
+    "total": 3
+  }
+}
+```
+you can filter the results by inserting a parameter in the url, so it will only get the results where the number of attempts is better than the number informed.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Example
+`http://127.0.0.1:8000/hash/generated/23844`
 
-## Security Vulnerabilities
+output:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```
+// 20211029015645
+// http://127.0.0.1:8000/hash/generated/23844
 
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+{
+  "number": {
+    "current_page": 1,
+    "data": [
+      {
+        "batch": "2021-10-29 04:51:34",
+        "block": "12",
+        "enter_word": "000012d39a221ad9d0e46b56d875e0c3",
+        "key_found": "0VHWn3TH"
+      }
+    ],
+    "first_page_url": "http://127.0.0.1:8000/hash/generated/23844?page=1",
+    "from": 1,
+    "last_page": 1,
+    "last_page_url": "http://127.0.0.1:8000/hash/generated/23844?page=1",
+    "links": [
+      {
+        "url": null,
+        "label": "&laquo; Previous",
+        "active": false
+      },
+      {
+        "url": "http://127.0.0.1:8000/hash/generated/23844?page=1",
+        "label": "1",
+        "active": true
+      },
+      {
+        "url": null,
+        "label": "Next &raquo;",
+        "active": false
+      }
+    ],
+    "next_page_url": null,
+    "path": "http://127.0.0.1:8000/hash/generated/23844",
+    "per_page": 20,
+    "prev_page_url": null,
+    "to": 1,
+    "total": 1
+  }
+}
+```
