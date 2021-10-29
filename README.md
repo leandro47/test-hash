@@ -105,7 +105,7 @@ you can filter the results by inserting a parameter in the url, so it will only 
 
 output:
 
-```
+``` json
 // 20211029015645
 // http://127.0.0.1:8000/hash/generated/23844
 
