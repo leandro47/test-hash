@@ -13,5 +13,8 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::middleware(['throttle:web'])->group(function () {
+    Route::post('hash/build', [HashController::class, 'build'])->name('hash/build');
+});
 
-Route::post('store', [HashController::class, 'store'])->name('store');
+Route::get('hash/generated/{number?}', [HashController::class, 'generated'])->name('hash/generated');

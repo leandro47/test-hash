@@ -2,19 +2,47 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\HashRepository;
+use App\Services\HashGenerator;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class HashController extends Controller
 {
-    public function store(Request $request)
+    private HashRepository $repository;
+    
+    public function __construct()
     {
-        for ($i = 0; $i < 500000; $i++) {
-            $key = uniqid();
-            $hash =  md5($request->input('text') . $key);
+        $this->repository = new HashRepository;
+    }
+    /**
+     * @param Request $request
+     * @return Response
+     */
+    public function build(Request $request): Response
+    {
+        $hashgenerator = new HashGenerator($request->input('text'));
 
-            if (\substr($hash, 0, 4) === '0000') {
-                return $hash;
-            }
+        try {
+            $hashFound = $hashgenerator->search();
+            $this->repository->store($hashFound);
+
+            return response(['hash_found' => $hashFound->hash_found], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return response()->json(
+                $e->getMessage(),
+                $e->getCode()
+            );
         }
+    }
+    
+    /**
+     * @param integer|null $numberTry
+     * @return Response
+     */
+    public function generated(int $numberTry = null): Response
+    {
+        $data = $this->repository->fetch($numberTry);
+        return response(['number' => $data]);
     }
 }

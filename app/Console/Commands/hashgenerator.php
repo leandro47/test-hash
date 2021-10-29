@@ -13,7 +13,7 @@ class hashgenerator extends Command
      *
      * @var string
      */
-    protected $signature = 'hash:generator {string} {--request=}';
+    protected $signature = 'hash:search {text} {--requests=}';
 
     /**
      * The console command description.
@@ -35,24 +35,30 @@ class hashgenerator extends Command
     /**
      * Execute the console command.
      *
-     * @return int
+     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
-        $string = $this->argument('string');
-        for ($i = 0; $i < $this->option('request'); $i++) {
-            $searchHash = Http::post(
-                env('APP_URL') . 'store',
-                ['text' => $string]
+        $text = $this->argument('text');
+        $option = $this->option('requests');
+
+        $url = env('APP_URL') . 'hash/build';
+        
+        for ($i = 0; $i < $option; $i++) {
+            $data = ['text' => $text];
+
+            $response = Http::post(
+                $url, $data
             );
 
-            if ($searchHash->failed()) {
-                dd($searchHash->body());
+            if ($response->failed()) {
+                $this->error($response->status() . ' ' . $response->body());
+                break;
             }
-            $string = $searchHash->body();
-            $this->error($searchHash->body());
+
+            $text = $response->json('hash_found');
         }
         
-        dd($searchHash->body());
+        $this->info('Command executed!');
     }
 }
